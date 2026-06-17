@@ -1,0 +1,89 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.6'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.devcho'
+version = '0.0.1-SNAPSHOT'
+description = 'devcho-back-jpa'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'org.springframework.boot:spring-boot-starter-validation'
+//    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+//    compileOnly 'org.projectlombok:lombok'
+//    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+//    annotationProcessor 'org.projectlombok:lombok'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+//    testCompileOnly 'org.projectlombok:lombok'
+//    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+//    testAnnotationProcessor 'org.projectlombok:lombok'
+//
+//    // 1. Querydsl 라이브러리
+//    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+//
+//    // 2. Q클래스 생성을 위한 어노테이션 프로세서
+//    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+//    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+//    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // 1. Core
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web' // webmvc 대신 web 사용이 표준입니다.
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    // 2. Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // 3. Test (이 부분이 중요합니다!)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test' // 통합 테스트 라이브러리
+    testRuntimeOnly 'com.h2database:h2' // 테스트 시 사용할 인메모리 DB
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // build.gradle (디펜던시 추가 후 그레이들 리로드)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+// JWT 라이브러리 (가장 많이 쓰는 jjwt)
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+}
+
+// Q클래스 생성 경로 설정 (선택 사항이지만 추천)
+def querydslDir = "src/main/generated"
+
+sourceSets {
+    main.java.srcDirs += [ querydslDir ]
+}
+
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+
+clean {
+    delete file(querydslDir)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
