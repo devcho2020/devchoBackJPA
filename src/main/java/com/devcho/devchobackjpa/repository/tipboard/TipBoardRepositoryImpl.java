@@ -2,6 +2,7 @@ package com.devcho.devchobackjpa.repository.tipboard;
 
 import com.devcho.devchobackjpa.domain.QFreeBoard;
 import com.devcho.devchobackjpa.domain.QTipBoard;
+import com.devcho.devchobackjpa.domain.QUserInfo;
 import com.devcho.devchobackjpa.domain.TipBoard;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,9 +24,13 @@ public class TipBoardRepositoryImpl implements TipBoardRepositoryCustom {
     public Page<TipBoard> searchTipBoards(String searchValue, String selectedOption, Pageable pageable) {
 
         QTipBoard tipBoard = QTipBoard.tipBoard;
+        QUserInfo creatorUserInfo = new QUserInfo("creatorUser");
+        QUserInfo updaterUserInfo = new QUserInfo("updaterUser");
 
         List<TipBoard> tipBoardList = queryFactory
                 .selectFrom(tipBoard)
+                .leftJoin(tipBoard.creator, creatorUserInfo).fetchJoin()
+                .leftJoin(tipBoard.updater, updaterUserInfo).fetchJoin()
                 .where(
                         tipBoardSearchOption(searchValue, selectedOption)
                 )
@@ -43,6 +48,24 @@ public class TipBoardRepositoryImpl implements TipBoardRepositoryCustom {
                 .fetchOne()).orElse(0L);
 
         return new PageImpl<>(tipBoardList, pageable, total);
+    }
+
+    @Override
+    public TipBoard findByIdWithCreatorAndUpdater(Long id) {
+        QTipBoard tipBoard = QTipBoard.tipBoard;
+        QUserInfo creatorUserInfo = new QUserInfo("creatorUser");
+        QUserInfo updaterUserInfo = new QUserInfo("updaterUser");
+
+        TipBoard result = queryFactory
+                .selectFrom(tipBoard)
+                .leftJoin(tipBoard.creator, creatorUserInfo).fetchJoin()
+                .leftJoin(tipBoard.updater, updaterUserInfo).fetchJoin()
+                .where(tipBoard.id.eq(id))
+                .fetchOne();
+        if (result == null) {
+            throw new RuntimeException("존재하지 않는 팁 게시글 입니다");
+        }
+        return result;
     }
 
     private BooleanExpression tipBoardSearchOption(String searchValue, String selectedOption) {

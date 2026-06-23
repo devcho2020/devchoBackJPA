@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,11 +18,15 @@ public class QTipBoard extends EntityPathBase<TipBoard> {
 
     private static final long serialVersionUID = 1910180154L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QTipBoard tipBoard = new QTipBoard("tipBoard");
 
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
+
+    public final QUserInfo creator;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -29,16 +34,28 @@ public class QTipBoard extends EntityPathBase<TipBoard> {
 
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
+    public final QUserInfo updater;
+
     public QTipBoard(String variable) {
-        super(TipBoard.class, forVariable(variable));
+        this(TipBoard.class, forVariable(variable), INITS);
     }
 
     public QTipBoard(Path<? extends TipBoard> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QTipBoard(PathMetadata metadata) {
-        super(TipBoard.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QTipBoard(PathMetadata metadata, PathInits inits) {
+        this(TipBoard.class, metadata, inits);
+    }
+
+    public QTipBoard(Class<? extends TipBoard> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.creator = inits.isInitialized("creator") ? new QUserInfo(forProperty("creator")) : null;
+        this.updater = inits.isInitialized("updater") ? new QUserInfo(forProperty("updater")) : null;
     }
 
 }

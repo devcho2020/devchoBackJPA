@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface TipBoardRepositoryCustom {
     Page<TipBoard> searchTipBoards(String searchValue, String selectedOption, Pageable pageable);
+    TipBoard findByIdWithCreatorAndUpdater(Long id);
 }

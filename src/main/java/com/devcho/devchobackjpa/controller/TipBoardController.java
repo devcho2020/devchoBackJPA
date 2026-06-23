@@ -4,6 +4,7 @@ import com.devcho.devchobackjpa.dto.page.PageResponse;
 import com.devcho.devchobackjpa.dto.tipboard.TipBoardRequestDTO;
 import com.devcho.devchobackjpa.dto.tipboard.TipBoardResponseDTO;
 import com.devcho.devchobackjpa.service.TipBoardService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +35,23 @@ public class TipBoardController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> saveTipBoard(@RequestBody TipBoardRequestDTO tipBoardRequestDTO) {
-        Long saveId = tipBoardService.saveTipBoard(tipBoardRequestDTO);
+    public ResponseEntity<Long> saveTipBoard(
+            HttpServletRequest request,
+            @RequestBody TipBoardRequestDTO tipBoardRequestDTO
+    ) {
+        Long userInfoId = (Long) request.getAttribute("userInfoId");
+        Long saveId = tipBoardService.saveTipBoard(tipBoardRequestDTO, userInfoId);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveId);
     }
 
     @PutMapping("/{tipBoardId}")
-    public ResponseEntity<Void> updateTipBoard(@PathVariable Long tipBoardId, @RequestBody TipBoardRequestDTO tipBoardRequestDTO) {
-        tipBoardService.updateTipBoard(tipBoardId, tipBoardRequestDTO);
+    public ResponseEntity<Void> updateTipBoard(
+            HttpServletRequest request,
+            @PathVariable Long tipBoardId,
+            @RequestBody TipBoardRequestDTO tipBoardRequestDTO
+    ) {
+        Long userInfoId = (Long) request.getAttribute("userInfoId");
+        tipBoardService.updateTipBoard(tipBoardId, tipBoardRequestDTO, userInfoId);
         return ResponseEntity.ok().build();
     }
 }

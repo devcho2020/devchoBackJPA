@@ -23,21 +23,29 @@ public class TipBoard {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private UserInfo creator;
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updater_id")
+    private UserInfo updater;
     private LocalDateTime updatedAt;
 
     @Builder
-    public TipBoard(Long id, String title, String content, LocalDateTime createdAt) {
+    public TipBoard(Long id, String title, String content, UserInfo creator, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.creator = creator;
         this.createdAt = LocalDateTime.now();
     }
 
-    public void update(String title, String content) {
+    public void update(String title, String content, UserInfo updater) {
         this.title = title;
         this.content = content;
+        this.updater = updater;
         this.updatedAt = LocalDateTime.now();
     }
 }
