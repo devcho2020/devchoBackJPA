@@ -1,10 +1,13 @@
 package com.devcho.devchobackjpa.service;
 
 import com.devcho.devchobackjpa.domain.FreeBoard;
+import com.devcho.devchobackjpa.domain.UserInfo;
 import com.devcho.devchobackjpa.dto.freeboard.FreeBoardRequestDTO;
 import com.devcho.devchobackjpa.dto.freeboard.FreeBoardResponseDTO;
 import com.devcho.devchobackjpa.dto.page.PageResponse;
 import com.devcho.devchobackjpa.repository.freeboard.FreeBoardRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FreeBoardService {
+
+    @PersistenceContext
+    private EntityManager em;
     private final FreeBoardRepository freeBoardRepository;
 
     public PageResponse<FreeBoardResponseDTO> getFreeBoardList(int page, int size, String selectedOption, String searchValue) {
@@ -35,25 +41,29 @@ public class FreeBoardService {
     }
 
     public FreeBoardResponseDTO findFreeBoardById(Long freeBoardId) {
-        FreeBoard freeBoard = freeBoardRepository
-                .findById(freeBoardId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글 입니다"));
+        FreeBoard freeBoard = freeBoardRepository.findFreeBoardByIdWithCreatorAndUpdater(freeBoardId);
         return FreeBoardResponseDTO.from(freeBoard);
     }
 
     @Transactional
-    public Long saveFreeBoard(FreeBoardRequestDTO dto) {
-        FreeBoard freeBoard = dto.toEntity();
+    public Long saveFreeBoard(FreeBoardRequestDTO dto, Long userInfoId  ) {
+        UserInfo proxyUser = em.getReference(UserInfo.class, userInfoId);
+        FreeBoard freeBoard = FreeBoard.builder()
+                .title(dto.title())
+                .content(dto.content())
+                .creator(proxyUser)
+                .build();
         return freeBoardRepository.save(freeBoard).getId();
     }
 
     @Transactional
-    public void updateFreeBoard(Long freeBoardId,FreeBoardRequestDTO dto) {
+    public void updateFreeBoard(Long freeBoardId,FreeBoardRequestDTO dto, Long userInfoId) {
+        UserInfo proxyUser = em.getReference(UserInfo.class, userInfoId);
         FreeBoard freeBoard = freeBoardRepository
                 .findById(freeBoardId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글 입니다"));
 
-        freeBoard.update(dto.title(), dto.content());
+        freeBoard.update(dto.title(), dto.content(), proxyUser);
     }
 
 }

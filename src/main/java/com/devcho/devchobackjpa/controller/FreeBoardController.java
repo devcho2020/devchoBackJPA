@@ -4,6 +4,7 @@ import com.devcho.devchobackjpa.dto.freeboard.FreeBoardRequestDTO;
 import com.devcho.devchobackjpa.dto.freeboard.FreeBoardResponseDTO;
 import com.devcho.devchobackjpa.dto.page.PageResponse;
 import com.devcho.devchobackjpa.service.FreeBoardService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,18 +38,22 @@ public class FreeBoardController {
 
     @PostMapping
     public ResponseEntity<Long> saveFreeBoard(
+            HttpServletRequest request,
             @RequestBody FreeBoardRequestDTO freeBoardRequestDTO
     ) {
-        Long saveId = freeBoardService.saveFreeBoard(freeBoardRequestDTO);
+        Long userInfoId = (Long) request.getAttribute("userInfoId");
+        Long saveId = freeBoardService.saveFreeBoard(freeBoardRequestDTO, userInfoId);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveId);
     }
 
     @PutMapping("/{freeBoardId}")
     public ResponseEntity<Void> updateFreeBoard(
+            HttpServletRequest request,
             @PathVariable Long freeBoardId,
             @RequestBody FreeBoardRequestDTO freeBoardRequestDTO
     ) {
-        freeBoardService.updateFreeBoard(freeBoardId, freeBoardRequestDTO);
+        Long userInfoId = (Long) request.getAttribute("userInfoId");
+        freeBoardService.updateFreeBoard(freeBoardId, freeBoardRequestDTO, userInfoId);
         return ResponseEntity.ok().build();
     }
 }

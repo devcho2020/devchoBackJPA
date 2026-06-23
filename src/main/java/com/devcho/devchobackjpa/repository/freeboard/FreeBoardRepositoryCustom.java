@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface FreeBoardRepositoryCustom {
     Page<FreeBoard> searchFreeBoard(String searchValue, String selectedOption, Pageable pageable);
+    FreeBoard findFreeBoardByIdWithCreatorAndUpdater(Long id);
 }

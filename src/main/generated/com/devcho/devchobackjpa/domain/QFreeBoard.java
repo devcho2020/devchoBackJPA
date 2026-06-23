@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,11 +18,15 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
 
     private static final long serialVersionUID = 1209249675L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QFreeBoard freeBoard = new QFreeBoard("freeBoard");
 
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
+
+    public final QUserInfo creator;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -29,16 +34,28 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
 
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
+    public final QUserInfo updater;
+
     public QFreeBoard(String variable) {
-        super(FreeBoard.class, forVariable(variable));
+        this(FreeBoard.class, forVariable(variable), INITS);
     }
 
     public QFreeBoard(Path<? extends FreeBoard> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QFreeBoard(PathMetadata metadata) {
-        super(FreeBoard.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QFreeBoard(PathMetadata metadata, PathInits inits) {
+        this(FreeBoard.class, metadata, inits);
+    }
+
+    public QFreeBoard(Class<? extends FreeBoard> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.creator = inits.isInitialized("creator") ? new QUserInfo(forProperty("creator")) : null;
+        this.updater = inits.isInitialized("updater") ? new QUserInfo(forProperty("updater")) : null;
     }
 
 }
