@@ -24,8 +24,16 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(String userId, String userName) {
-        Claims claims = Jwts.claims().setSubject(userId);
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String createToken(Long userInfoId, String userName) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userInfoId));
         claims.put("userName", userName);
 
         Date now = new Date();
@@ -49,12 +57,8 @@ public class JwtProvider {
         }
     }
 
-    public String getUserId(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public Long getUserInfoId(String token) {
+        String subject = parseClaims(token).getSubject();
+        return Long.parseLong(subject);
     }
 }

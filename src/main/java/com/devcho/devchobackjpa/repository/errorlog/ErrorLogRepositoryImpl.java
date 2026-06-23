@@ -2,6 +2,7 @@ package com.devcho.devchobackjpa.repository.errorlog;
 
 import com.devcho.devchobackjpa.domain.ErrorLog;
 import com.devcho.devchobackjpa.domain.QErrorLog;
+import com.devcho.devchobackjpa.domain.QUserInfo;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,13 @@ public class ErrorLogRepositoryImpl implements ErrorLogRepositoryCustom {
     public Page<ErrorLog> searchErrorLogs(String selectedOption, String searchValue, Pageable pageable) {
         QErrorLog errorLog = QErrorLog.errorLog;
 
+        QUserInfo creatorUserInfo = new QUserInfo("creatorUser");
+        QUserInfo updaterUserInfo = new QUserInfo("updaterUser");
+
         List<ErrorLog> errorLogList = queryFactory
                 .selectFrom(errorLog)
+                .leftJoin(errorLog.creator, creatorUserInfo).fetchJoin()
+                .leftJoin(errorLog.updater, updaterUserInfo).fetchJoin()
                 .where(
                     errorLogSearchOption(searchValue, selectedOption)
                 )
@@ -30,7 +36,6 @@ public class ErrorLogRepositoryImpl implements ErrorLogRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .orderBy(errorLog.id.desc())
                 .fetch();
-
 
         long total = Optional.ofNullable(queryFactory
                 .select(errorLog.count())
@@ -42,6 +47,26 @@ public class ErrorLogRepositoryImpl implements ErrorLogRepositoryCustom {
 
 
         return new PageImpl<>(errorLogList, pageable, total);
+    }
+
+    @Override
+    public ErrorLog findErrorLogByIdWithCreatorAndUpdater(Long id) {
+        QErrorLog errorLog = QErrorLog.errorLog;
+
+        QUserInfo creatorUserInfo = new QUserInfo("creatorUser");
+        QUserInfo updaterUserInfo = new QUserInfo("updaterUser");
+
+        ErrorLog result = queryFactory
+                .selectFrom(errorLog)
+                .leftJoin(errorLog.creator, creatorUserInfo).fetchJoin()
+                .leftJoin(errorLog.updater, updaterUserInfo).fetchJoin()
+                .where(errorLog.id.eq(id))
+                .fetchOne();
+
+        if (result == null) {
+            throw new RuntimeException("존재하지 않는 에러 로그입니다");
+        }
+        return result;
     }
 
     private BooleanExpression errorLogSearchOption(String searchValue, String selectedOption) {

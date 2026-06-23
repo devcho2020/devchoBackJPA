@@ -17,7 +17,6 @@ public class AuthService {
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtProvider jwtProvider;
-//    private final JwtPro
 
     public AuthResponseDTO login(String loginId, String loginPassword) {
         UserInfo userInfo = authRepository.findUserInfoByUserId(loginId);
@@ -32,7 +31,7 @@ public class AuthService {
             loginResult = false;
             failMsg = "비밀번호가 일치하지 않습니다";
         } else {
-            token = jwtProvider.createToken(userInfo.getUserId(), userInfo.getUserName());
+            token = jwtProvider.createToken(userInfo.getId(), userInfo.getUserName());
         }
         return new AuthResponseDTO(token, userInfo, loginResult, failMsg);
     }

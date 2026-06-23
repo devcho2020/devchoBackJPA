@@ -27,19 +27,32 @@ public class ErrorLog {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private UserInfo creator;
+
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updater_id")
+    private UserInfo updater;
+
+    private LocalDateTime updatedAt;
+
     @Builder
-    public ErrorLog(String title, String area, String content) {
+    public ErrorLog(String title, String area, String content, UserInfo userInfo) {
         this.title = title;
         this.area = area;
         this.content = content;
+        this.creator = userInfo;
         this.createdAt = LocalDateTime.now();
     }
 
-    public void update(String title, String area, String content) {
+    public void update(String title, String area, String content, UserInfo userInfo) {
         this.title = title;
         this.area = area;
         this.content = content;
+        this.updater = userInfo;
+        this.updatedAt = LocalDateTime.now();
     }
 }

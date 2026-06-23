@@ -1,14 +1,19 @@
 package com.devcho.devchobackjpa.dto.errorlog;
 
-import java.time.LocalDateTime;
 import com.devcho.devchobackjpa.domain.ErrorLog;
+import com.devcho.devchobackjpa.domain.UserInfo;
+
+import java.time.LocalDateTime;
 
 public record ErrorLogResponseDTO(
         Long id,
         String title,
         String area,
         String content,
-        LocalDateTime createdAt
+        UserInfo creator,
+        UserInfo updater,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
     public static ErrorLogResponseDTO
         from(ErrorLog errorLog) {
@@ -17,7 +22,10 @@ public record ErrorLogResponseDTO(
                 errorLog.getTitle(),
                 errorLog.getArea(),
                 errorLog.getContent(),
-                errorLog.getCreatedAt()
+                errorLog.getCreator(),
+                errorLog.getUpdater(),
+                errorLog.getCreatedAt(),
+                errorLog.getUpdatedAt()
         );
     }
 }
