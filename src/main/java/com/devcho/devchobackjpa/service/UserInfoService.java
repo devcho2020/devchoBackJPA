@@ -13,7 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,5 +77,19 @@ public class UserInfoService {
         }
 
         userInfo.update(encodedPassword, dto.position(), dto.level(), dto.phone());
+    }
+
+    public Map<String, Object> checkUserIdDuplication(String userId) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (userInfoRepository.existsByUserId(userId)) {
+            response.put("duplication", true);
+            response.put("message", "이미 사용중인 아이디 입니다");
+        } else {
+            response.put("duplication", false);
+            response.put("message", "사용 가능한 아이디 입니다");
+        }
+        return response;
     }
 }
