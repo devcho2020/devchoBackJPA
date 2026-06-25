@@ -84,10 +84,10 @@ public class UserInfoService {
         Map<String, Object> response = new HashMap<>();
 
         if (userInfoRepository.existsByUserId(userId)) {
-            response.put("duplication", true);
-            response.put("message", "이미 사용중인 아이디 입니다");
+            response.put("duplicationCheckOk", false);
+            response.put("message", "이미 사용중인 아이디 입니다\n다른 아이디를 사용해 주세요");
         } else {
-            response.put("duplication", false);
+            response.put("duplicationCheckOk", true);
             response.put("message", "사용 가능한 아이디 입니다");
         }
         return response;
