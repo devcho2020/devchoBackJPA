@@ -8,6 +8,7 @@ public record UserInfoResponseDTO(
         Long id,
         String userId,
         String userName,
+        Integer level,
         Integer phone,
         String position,
         LocalDateTime createdAt
@@ -17,6 +18,7 @@ public record UserInfoResponseDTO(
                 userInfo.getId(),
                 userInfo.getUserId(),
                 userInfo.getUserName(),
+                userInfo.getLevel(),
                 userInfo.getPhone(),
                 userInfo.getPosition(),
                 userInfo.getCreatedAt()

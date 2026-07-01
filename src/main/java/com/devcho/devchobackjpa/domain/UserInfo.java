@@ -51,8 +51,10 @@ public class UserInfo {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void update(String password, String position, Integer level, Integer phone) {
-        this.password = password;
+    public void update(String password, String userId, String userName, String position, Integer level, Integer phone) {
+        if (!password.isBlank()) {this.password = password;}
+        this.userId = userId;
+        this.userName = userName;
         this.position = position;
         this.level = level;
         this.phone = phone;

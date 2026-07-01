@@ -76,7 +76,7 @@ public class UserInfoService {
             encodedPassword = passwordEncoder.encode(dto.password());
         }
 
-        userInfo.update(encodedPassword, dto.position(), dto.level(), dto.phone());
+        userInfo.update(encodedPassword, dto.userId(), dto.userName(), dto.position(), dto.level(), dto.phone());
     }
 
     public Map<String, Object> checkUserIdDuplication(String userId) {
