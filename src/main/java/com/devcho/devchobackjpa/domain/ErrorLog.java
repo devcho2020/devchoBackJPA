@@ -34,7 +34,7 @@ public class ErrorLog {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updater_id")
+    @JoinColumn(name = "updater")
     private UserInfo updater;
 
     private LocalDateTime updatedAt;
@@ -48,11 +48,11 @@ public class ErrorLog {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void update(String title, String area, String content, UserInfo userInfo) {
+    public void update(String title, String area, String content, UserInfo updater) {
         this.title = title;
         this.area = area;
         this.content = content;
-        this.updater = userInfo;
+        this.updater = updater;
         this.updatedAt = LocalDateTime.now();
     }
 }

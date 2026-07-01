@@ -46,8 +46,8 @@ public class ErrorLogService {
     }
 
     @Transactional
-    public Long saveErrorLog(ErrorLogRequestDTO dto, Long userInfoId) {
-        UserInfo proxyUserInfo = em.getReference(UserInfo.class, userInfoId);
+    public Long saveErrorLog(ErrorLogRequestDTO dto, Long sessionId) {
+        UserInfo proxyUserInfo = em.getReference(UserInfo.class, sessionId);
         ErrorLog errorLog = ErrorLog.builder()
                 .title(dto.title())
                 .content(dto.content())
@@ -58,8 +58,8 @@ public class ErrorLogService {
     }
 
     @Transactional
-    public void updateErrorLog(Long errorLogId, ErrorLogRequestDTO dto, Long userInfoId) {
-        UserInfo proxyUserInfo = em.getReference(UserInfo.class, userInfoId);
+    public void updateErrorLog(Long errorLogId, ErrorLogRequestDTO dto, Long sessionId) {
+        UserInfo proxyUserInfo = em.getReference(UserInfo.class, sessionId);
         ErrorLog errorLog = errorLogRepository
                 .findById(errorLogId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 에러 로그입니다"));

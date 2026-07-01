@@ -4,6 +4,7 @@ import com.devcho.devchobackjpa.dto.page.PageResponse;
 import com.devcho.devchobackjpa.dto.user.UserInfoRequestDTO;
 import com.devcho.devchobackjpa.dto.user.UserInfoResponseDTO;
 import com.devcho.devchobackjpa.service.UserInfoService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,9 +48,21 @@ public class UserInfoController {
     @PutMapping("/{userInfoId}")
     public ResponseEntity<Void> updateUserInfo(
             @PathVariable Long userInfoId,
-            @RequestBody UserInfoRequestDTO userInfoRequestDTO
+            @RequestBody UserInfoRequestDTO userInfoRequestDTO,
+            HttpServletRequest request
     ) {
-        userInfoService.updateUserInfo(userInfoId, userInfoRequestDTO);
+        Long sessionId = (Long) request.getAttribute("sessionId");
+        userInfoService.updateUserInfo(userInfoId, userInfoRequestDTO, sessionId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/reset-password/{userInfoId}")
+    public ResponseEntity<Void> updateUserInfoResetPassword(
+            @PathVariable Long userInfoId,
+            HttpServletRequest request
+    ) {
+        Long sessionId = (Long) request.getAttribute("sessionId");
+        userInfoService.updateUserInfoResetPassword(userInfoId, sessionId);
         return ResponseEntity.ok().build();
     }
 

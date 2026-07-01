@@ -46,8 +46,8 @@ public class FreeBoardService {
     }
 
     @Transactional
-    public Long saveFreeBoard(FreeBoardRequestDTO dto, Long userInfoId  ) {
-        UserInfo proxyUser = em.getReference(UserInfo.class, userInfoId);
+    public Long saveFreeBoard(FreeBoardRequestDTO dto, Long sessionId  ) {
+        UserInfo proxyUser = em.getReference(UserInfo.class, sessionId);
         FreeBoard freeBoard = FreeBoard.builder()
                 .title(dto.title())
                 .content(dto.content())
@@ -57,8 +57,8 @@ public class FreeBoardService {
     }
 
     @Transactional
-    public void updateFreeBoard(Long freeBoardId,FreeBoardRequestDTO dto, Long userInfoId) {
-        UserInfo proxyUser = em.getReference(UserInfo.class, userInfoId);
+    public void updateFreeBoard(Long freeBoardId,FreeBoardRequestDTO dto, Long sessionId) {
+        UserInfo proxyUser = em.getReference(UserInfo.class, sessionId);
         FreeBoard freeBoard = freeBoardRepository
                 .findById(freeBoardId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글 입니다"));

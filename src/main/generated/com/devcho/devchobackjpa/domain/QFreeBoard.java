@@ -54,8 +54,8 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
 
     public QFreeBoard(Class<? extends FreeBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.creator = inits.isInitialized("creator") ? new QUserInfo(forProperty("creator")) : null;
-        this.updater = inits.isInitialized("updater") ? new QUserInfo(forProperty("updater")) : null;
+        this.creator = inits.isInitialized("creator") ? new QUserInfo(forProperty("creator"), inits.get("creator")) : null;
+        this.updater = inits.isInitialized("updater") ? new QUserInfo(forProperty("updater"), inits.get("updater")) : null;
     }
 
 }

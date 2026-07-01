@@ -42,8 +42,8 @@ public class ErrorLogController {
             HttpServletRequest request,
             @RequestBody ErrorLogRequestDTO dto
     ) {
-        Long userInfoID = (Long) request.getAttribute("userInfoId");
-        Long saveId = errorLogService.saveErrorLog(dto, userInfoID);
+        Long sessionId = (Long) request.getAttribute("userInfoId");
+        Long saveId = errorLogService.saveErrorLog(dto, sessionId);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveId);
     }
 
@@ -52,8 +52,8 @@ public class ErrorLogController {
             HttpServletRequest request,
             @PathVariable Long errorLogId,
             @RequestBody ErrorLogRequestDTO dto) {
-        Long userInfoID = (Long) request.getAttribute("userInfoId");
-        errorLogService.updateErrorLog(errorLogId, dto, userInfoID);
+        Long sessionId = (Long) request.getAttribute("userInfoId");
+        errorLogService.updateErrorLog(errorLogId, dto, sessionId);
         return ResponseEntity.ok().build();
     }
 }

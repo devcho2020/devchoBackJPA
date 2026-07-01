@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QUserInfo extends EntityPathBase<UserInfo> {
 
     private static final long serialVersionUID = -628586168L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QUserInfo userInfo = new QUserInfo("userInfo");
 
@@ -33,20 +36,31 @@ public class QUserInfo extends EntityPathBase<UserInfo> {
 
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
+    public final QUserInfo updater;
+
     public final StringPath userId = createString("userId");
 
     public final StringPath userName = createString("userName");
 
     public QUserInfo(String variable) {
-        super(UserInfo.class, forVariable(variable));
+        this(UserInfo.class, forVariable(variable), INITS);
     }
 
     public QUserInfo(Path<? extends UserInfo> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QUserInfo(PathMetadata metadata) {
-        super(UserInfo.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QUserInfo(PathMetadata metadata, PathInits inits) {
+        this(UserInfo.class, metadata, inits);
+    }
+
+    public QUserInfo(Class<? extends UserInfo> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.updater = inits.isInitialized("updater") ? new QUserInfo(forProperty("updater"), inits.get("updater")) : null;
     }
 
 }

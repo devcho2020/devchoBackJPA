@@ -41,8 +41,8 @@ public class FreeBoardController {
             HttpServletRequest request,
             @RequestBody FreeBoardRequestDTO freeBoardRequestDTO
     ) {
-        Long userInfoId = (Long) request.getAttribute("userInfoId");
-        Long saveId = freeBoardService.saveFreeBoard(freeBoardRequestDTO, userInfoId);
+        Long sessionId = (Long) request.getAttribute("sessionId");
+        Long saveId = freeBoardService.saveFreeBoard(freeBoardRequestDTO, sessionId);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveId);
     }
 
@@ -52,8 +52,8 @@ public class FreeBoardController {
             @PathVariable Long freeBoardId,
             @RequestBody FreeBoardRequestDTO freeBoardRequestDTO
     ) {
-        Long userInfoId = (Long) request.getAttribute("userInfoId");
-        freeBoardService.updateFreeBoard(freeBoardId, freeBoardRequestDTO, userInfoId);
+        Long sessionId = (Long) request.getAttribute("sessionId");
+        freeBoardService.updateFreeBoard(freeBoardId, freeBoardRequestDTO, sessionId);
         return ResponseEntity.ok().build();
     }
 }

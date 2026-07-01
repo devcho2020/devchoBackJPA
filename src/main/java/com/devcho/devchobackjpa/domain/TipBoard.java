@@ -24,12 +24,12 @@ public class TipBoard {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id")
+    @JoinColumn(name = "creator")
     private UserInfo creator;
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updater_id")
+    @JoinColumn(name = "updater")
     private UserInfo updater;
     private LocalDateTime updatedAt;
 

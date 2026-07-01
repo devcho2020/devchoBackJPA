@@ -39,8 +39,8 @@ public class TipBoardController {
             HttpServletRequest request,
             @RequestBody TipBoardRequestDTO tipBoardRequestDTO
     ) {
-        Long userInfoId = (Long) request.getAttribute("userInfoId");
-        Long saveId = tipBoardService.saveTipBoard(tipBoardRequestDTO, userInfoId);
+        Long sessionId = (Long) request.getAttribute("sessionId");
+        Long saveId = tipBoardService.saveTipBoard(tipBoardRequestDTO, sessionId);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveId);
     }
 
@@ -50,8 +50,8 @@ public class TipBoardController {
             @PathVariable Long tipBoardId,
             @RequestBody TipBoardRequestDTO tipBoardRequestDTO
     ) {
-        Long userInfoId = (Long) request.getAttribute("userInfoId");
-        tipBoardService.updateTipBoard(tipBoardId, tipBoardRequestDTO, userInfoId);
+        Long sessionId = (Long) request.getAttribute("sessionId");
+        tipBoardService.updateTipBoard(tipBoardId, tipBoardRequestDTO, sessionId);
         return ResponseEntity.ok().build();
     }
 }

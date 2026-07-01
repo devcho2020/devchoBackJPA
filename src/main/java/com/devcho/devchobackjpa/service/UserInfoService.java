@@ -5,6 +5,8 @@ import com.devcho.devchobackjpa.dto.page.PageResponse;
 import com.devcho.devchobackjpa.dto.user.UserInfoRequestDTO;
 import com.devcho.devchobackjpa.dto.user.UserInfoResponseDTO;
 import com.devcho.devchobackjpa.repository.user.UserInfoRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserInfoService {
 
+    @PersistenceContext
+    private EntityManager em;
     private final UserInfoRepository userInfoRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -65,18 +69,25 @@ public class UserInfoService {
     }
 
     @Transactional
-    public void updateUserInfo(Long userInfoId, UserInfoRequestDTO dto) {
+    public void updateUserInfo(Long userInfoId, UserInfoRequestDTO dto, Long sessionId) {
+        UserInfo proxyUser = em.getReference(UserInfo.class, sessionId);
         UserInfo userInfo = userInfoRepository
                 .findById(userInfoId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자 입니다."));
 
-        String encodedPassword = userInfo.getPassword();
+        userInfo.update(dto.userId(), dto.userName(), dto.position(), dto.level(), dto.phone(), proxyUser);
+    }
 
-        if (dto.password() != null) {
-            encodedPassword = passwordEncoder.encode(dto.password());
-        }
+    @Transactional
+    public void updateUserInfoResetPassword(Long userInfoId, Long sessionId) {
+        UserInfo proxyUser = em.getReference(UserInfo.class, sessionId);
+        UserInfo userInfo = userInfoRepository
+                .findById(userInfoId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자 입니다."));
 
-        userInfo.update(encodedPassword, dto.userId(), dto.userName(), dto.position(), dto.level(), dto.phone());
+        String encodedPassword = passwordEncoder.encode("1234");
+
+        userInfo.updatePassword(encodedPassword, proxyUser);
     }
 
     public Map<String, Object> checkUserIdDuplication(String userId) {

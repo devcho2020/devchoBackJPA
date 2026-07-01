@@ -32,7 +32,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
             if (jwtProvider.validateToken(token)) {
                 Long userInfoId = jwtProvider.getUserInfoId(token);
-                request.setAttribute("userInfoId", userInfoId);
+                request.setAttribute("sessionId", userInfoId);
                 return true;
             } else {
                 sendErrorResponse(response, "ERR_TOKEN_EXPIRED", "로그인 정보가 만료 되었습니다\n다시 로그인 해주세요");

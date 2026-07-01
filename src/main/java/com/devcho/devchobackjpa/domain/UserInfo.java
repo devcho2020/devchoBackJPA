@@ -37,6 +37,10 @@ public class UserInfo {
 
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updater")
+    private UserInfo updater;
+
     private LocalDateTime updatedAt;
 
     @Builder
@@ -51,15 +55,19 @@ public class UserInfo {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void update(String password, String userId, String userName, String position, Integer level, Integer phone) {
-        if (!password.isBlank()) {this.password = password;}
+    public void update(String userId, String userName, String position, Integer level, Integer phone, UserInfo updater) {
         this.userId = userId;
         this.userName = userName;
         this.position = position;
         this.level = level;
         this.phone = phone;
+        this.updater = updater;
         this.updatedAt = LocalDateTime.now();
     }
 
-
+    public void updatePassword(String password, UserInfo updater) {
+        this.password = password;
+        this.updater = updater;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
