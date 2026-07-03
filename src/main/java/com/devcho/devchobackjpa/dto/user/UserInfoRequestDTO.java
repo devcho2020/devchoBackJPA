@@ -9,15 +9,4 @@ public record UserInfoRequestDTO(
         Integer level,
         Integer phone,
         String position
-) {
-    public UserInfo toEntity() {
-        return UserInfo.builder()
-                .userId(userId)
-                .userName(userName)
-                .password(password)
-                .level(level)
-                .phone(phone)
-                .position(position)
-                .build();
-    }
-}
+) {}

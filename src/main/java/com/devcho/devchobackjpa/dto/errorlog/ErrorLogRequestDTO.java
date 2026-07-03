@@ -7,12 +7,4 @@ public record ErrorLogRequestDTO(
         String title,
         String area,
         String content
-) {
-    public ErrorLog toEntity() {
-        return ErrorLog.builder()
-                .title(title)
-                .content(content)
-                .area(area)
-                .build();
-    }
-}
+) {}

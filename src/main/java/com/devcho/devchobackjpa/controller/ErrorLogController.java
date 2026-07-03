@@ -4,7 +4,6 @@ import com.devcho.devchobackjpa.dto.errorlog.ErrorLogRequestDTO;
 import com.devcho.devchobackjpa.dto.errorlog.ErrorLogResponseDTO;
 import com.devcho.devchobackjpa.dto.page.PageResponse;
 import com.devcho.devchobackjpa.service.ErrorLogService;
-import com.devcho.devchobackjpa.util.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class ErrorLogController {
 
     private final ErrorLogService errorLogService;
-    private final JwtProvider jwtProvider;
 
     @GetMapping
     public ResponseEntity<PageResponse<ErrorLogResponseDTO>> getErrorLogs(
@@ -42,7 +40,7 @@ public class ErrorLogController {
             HttpServletRequest request,
             @RequestBody ErrorLogRequestDTO dto
     ) {
-        Long sessionId = (Long) request.getAttribute("userInfoId");
+        Long sessionId = (Long) request.getAttribute("sessionId");
         Long saveId = errorLogService.saveErrorLog(dto, sessionId);
         return ResponseEntity.status(HttpStatus.CREATED).body(saveId);
     }
@@ -52,7 +50,7 @@ public class ErrorLogController {
             HttpServletRequest request,
             @PathVariable Long errorLogId,
             @RequestBody ErrorLogRequestDTO dto) {
-        Long sessionId = (Long) request.getAttribute("userInfoId");
+        Long sessionId = (Long) request.getAttribute("sessionId");
         errorLogService.updateErrorLog(errorLogId, dto, sessionId);
         return ResponseEntity.ok().build();
     }

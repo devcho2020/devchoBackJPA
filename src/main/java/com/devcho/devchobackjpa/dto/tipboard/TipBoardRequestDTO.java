@@ -6,11 +6,4 @@ public record TipBoardRequestDTO(
         Long id,
         String title,
         String content
-) {
-    public TipBoard toEntity() {
-        return TipBoard.builder()
-                .title(title)
-                .content(content)
-                .build();
-    }
-}
+) {}

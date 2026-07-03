@@ -6,12 +6,4 @@ public record FreeBoardRequestDTO(
         Long id,
         String title,
         String content
-) {
-    public FreeBoard toEntity() {
-        return FreeBoard.builder()
-                .title(title)
-                .content(content)
-                .build();
-
-    }
-}
+) {}
