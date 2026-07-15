@@ -4,6 +4,8 @@ import com.devcho.devchobackjpa.domain.CodeInfo;
 import com.devcho.devchobackjpa.domain.UserInfo;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public record CodeInfoResponseDTO(
         String code,
@@ -16,7 +18,8 @@ public record CodeInfoResponseDTO(
         UserInfo creator,
         LocalDateTime createdAt,
         UserInfo updater,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        List<CodeInfoResponseDTO> children
 ) {
     public static CodeInfoResponseDTO
         from(CodeInfo codeInfo) {
@@ -31,7 +34,8 @@ public record CodeInfoResponseDTO(
                 codeInfo.getCreator(),
                 codeInfo.getCreatedAt(),
                 codeInfo.getUpdater(),
-                codeInfo.getUpdatedAt()
+                codeInfo.getUpdatedAt(),
+                new ArrayList<>()
         );
     }
 }

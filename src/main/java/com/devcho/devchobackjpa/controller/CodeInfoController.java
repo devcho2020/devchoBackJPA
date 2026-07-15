@@ -1,8 +1,8 @@
 package com.devcho.devchobackjpa.controller;
 
+import com.devcho.devchobackjpa.dto.code.CodeInfoListResponseDTO;
 import com.devcho.devchobackjpa.dto.code.CodeInfoRequestDTO;
 import com.devcho.devchobackjpa.dto.code.CodeInfoResponseDTO;
-import com.devcho.devchobackjpa.dto.page.PageResponse;
 import com.devcho.devchobackjpa.service.CodeInfoService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -11,20 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/code")
+@RequestMapping("/api/code-info")
 @RequiredArgsConstructor
 public class CodeInfoController {
 
     private final CodeInfoService codeInfoService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<CodeInfoResponseDTO>> getCodeInfoList(
+    public ResponseEntity<CodeInfoListResponseDTO> getCodeInfoList(
             @RequestParam(defaultValue = "all") String selectedOption,
             @RequestParam(defaultValue = "") String searchValue,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(required = false) boolean useYn
     ) {
-        PageResponse<CodeInfoResponseDTO> response = codeInfoService.getCodeInfoList(page, size, selectedOption, searchValue);
+        CodeInfoListResponseDTO response = codeInfoService.getCodeInfoList(selectedOption, searchValue, useYn);
         return ResponseEntity.ok(response);
     }
 

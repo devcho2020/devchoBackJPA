@@ -1,10 +1,10 @@
 package com.devcho.devchobackjpa.repository.code;
 
 import com.devcho.devchobackjpa.domain.CodeInfo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface CodeInfoRepositoryCustom {
-    Page<CodeInfo> searchCodeInfo(String searchValue, String selectedOption, Pageable pageable);
+    List<CodeInfo> searchCodeInfo(String selectedOption, boolean useYn);
     CodeInfo findByCodeWithCreatorAndUpdater(String code);
 }
