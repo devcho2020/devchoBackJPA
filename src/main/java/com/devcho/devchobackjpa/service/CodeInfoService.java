@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,13 +32,12 @@ public class CodeInfoService {
         Map<String, CodeInfoResponseDTO> dtoMap = content.stream()
                 .collect(Collectors.toMap(
                         CodeInfo::getCode,
-                        CodeInfoResponseDTO::from // 🎯 작성하신 static 팩토리 메서드 활용!
+                        CodeInfoResponseDTO::from
                 ));
 
         List<CodeInfoResponseDTO> result = new ArrayList<>();
 
         // codeInfo 부모.children = 자식 작업
-        // TODO - 코드 sort 안맞음
         for (CodeInfoResponseDTO dto : dtoMap.values()) {
             if (dto.parentCode() == null || dto.codeLevel() == 0) {
                 result.add(dto);
@@ -54,6 +50,8 @@ public class CodeInfoService {
                 }
             }
         }
+
+        sortCodeTree(result);
 
         if (!selectedOption.isBlank() && !searchValue.isBlank()) {
 
@@ -141,6 +139,20 @@ public class CodeInfoService {
                 dto.codeSort(),
                 proxyUser
         );
+    }
+
+    private void sortCodeTree(List<CodeInfoResponseDTO> codeList) {
+        if (codeList.isEmpty()) {
+            return;
+        }
+
+        codeList.sort(Comparator.comparingInt(CodeInfoResponseDTO::codeSort));
+
+        for (CodeInfoResponseDTO dto : codeList) {
+            if (dto.children() != null && !dto.children().isEmpty()) {
+                sortCodeTree(dto.children());
+            }
+        }
     }
 
     private boolean isSearchChildrenList (CodeInfoResponseDTO dto, String searchValue, String selectedOption) {
