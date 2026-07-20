@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,44 +76,21 @@ public class CodeInfoService {
 
     }
 
-    private boolean isSearchChildrenList (CodeInfoResponseDTO dto, String searchValue, String selectedOption) {
-        boolean result = false;
-
-        for (CodeInfoResponseDTO childDto : dto.children()) {
-            if (isMatched(childDto, searchValue, selectedOption)) {
-                result = true;
-                break;
-            } else if (childDto.children() != null && !childDto.children().isEmpty()) {
-                result = isSearchChildrenList(childDto, searchValue, selectedOption);
-            }
-        }
-
-        return result;
-    }
-
-    private long searchCodeListTotal(List<CodeInfoResponseDTO> searchResult) {
-        long total = 0;
-        for (CodeInfoResponseDTO dto : searchResult) {
-            total++;
-            if (dto.children() != null && !dto.children().isEmpty()) {
-                total += searchCodeListTotal(dto.children());
-            }
-        }
-        return total;
-    }
-
-    private boolean isMatched(CodeInfoResponseDTO dto, String searchValue, String selectedOption) {
-        return switch (selectedOption) {
-            case "all" -> dto.code().contains(searchValue) || dto.codeName().contains(searchValue);
-            case "code" -> dto.code().contains(searchValue);
-            case "codeName" -> dto.codeName().contains(searchValue);
-            default -> true;
-        };
-    }
-
     public CodeInfoResponseDTO findCodeInfoByCode(String code) {
         CodeInfo codeinfo = codeInfoRepository.findByCodeWithCreatorAndUpdater(code);
         return CodeInfoResponseDTO.from(codeinfo);
+    }
+
+    public Map<String, Object> checkCodeInfoCodeDuplication(String code) {
+        Map<String, Object> response = new HashMap<>();
+        if (codeInfoRepository.existsByCode(code)) {
+            response.put("duplicationCheckOk", false);
+            response.put("message", "이미 사용중인 코드 입니다\n다른 코드를 사용해 주세요");
+        } else {
+            response.put("duplicationCheckOk", true);
+            response.put("message", "사용 가능한 코드 입니다");
+        }
+        return response;
     }
 
     @Transactional
@@ -163,5 +141,40 @@ public class CodeInfoService {
                 dto.codeSort(),
                 proxyUser
         );
+    }
+
+    private boolean isSearchChildrenList (CodeInfoResponseDTO dto, String searchValue, String selectedOption) {
+        boolean result = false;
+
+        for (CodeInfoResponseDTO childDto : dto.children()) {
+            if (isMatched(childDto, searchValue, selectedOption)) {
+                result = true;
+                break;
+            } else if (childDto.children() != null && !childDto.children().isEmpty()) {
+                result = isSearchChildrenList(childDto, searchValue, selectedOption);
+            }
+        }
+
+        return result;
+    }
+
+    private long searchCodeListTotal(List<CodeInfoResponseDTO> searchResult) {
+        long total = 0;
+        for (CodeInfoResponseDTO dto : searchResult) {
+            total++;
+            if (dto.children() != null && !dto.children().isEmpty()) {
+                total += searchCodeListTotal(dto.children());
+            }
+        }
+        return total;
+    }
+
+    private boolean isMatched(CodeInfoResponseDTO dto, String searchValue, String selectedOption) {
+        return switch (selectedOption) {
+            case "all" -> dto.code().contains(searchValue) || dto.codeName().contains(searchValue);
+            case "code" -> dto.code().contains(searchValue);
+            case "codeName" -> dto.codeName().contains(searchValue);
+            default -> true;
+        };
     }
 }

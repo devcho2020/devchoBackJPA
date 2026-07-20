@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/code-info")
 @RequiredArgsConstructor
@@ -52,5 +54,13 @@ public class CodeInfoController {
         Long sessionId = (Long) request.getAttribute("sessionId");
         codeInfoService.updateCodeInfo(dto, sessionId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/check-code")
+    public ResponseEntity<Map<String, Object>> checkCodeInfoCodeDuplication(
+            @RequestParam(name = "code", required = true) String code
+    ) {
+        Map<String, Object> response = codeInfoService.checkCodeInfoCodeDuplication(code);
+        return ResponseEntity.ok(response);
     }
 }

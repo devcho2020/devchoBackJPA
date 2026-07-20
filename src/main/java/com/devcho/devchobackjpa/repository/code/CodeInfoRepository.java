@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface CodeInfoRepository extends JpaRepository<CodeInfo, Long>, CodeInfoRepositoryCustom {
     Optional<CodeInfo> findByCode(String code);
+
+    boolean existsByCode(String code);
 }
