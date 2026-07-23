@@ -1,0 +1,25 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: devcho-back-jpa
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: root
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # 테이블 자동 생성/수정
+#      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+jwt:
+  secretKey: ${JWT_SECRET_KEY}
+
+cors:
+  allowed-origins: http://localhost
